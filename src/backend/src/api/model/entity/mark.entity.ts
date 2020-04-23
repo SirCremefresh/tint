@@ -9,11 +9,11 @@ export enum MarkType {
 
 @Entity({name: "mark"})
 export class MarkEntity extends BaseEntity {
-    @Column()
-    x: number;
+    @Column("simple-json")
+    location: { x: number, y: number };
 
-    @Column()
-    y: number;
+    @Column("simple-json")
+    size: { width: number, height: number };
 
     @Column()
     content: string;

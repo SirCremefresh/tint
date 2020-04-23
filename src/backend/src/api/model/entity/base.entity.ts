@@ -1,14 +1,10 @@
-import { PrimaryGeneratedColumn, Column, Index } from "typeorm";
+import {PrimaryGeneratedColumn, Column, Generated } from "typeorm";
 
 export abstract class BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Index({ unique: true })
     @Column()
-    guid: string;
-
-    public static generateGuid(): string {
-        return "10";
-    }
+    @Generated("uuid")
+    uuid: string;
 }

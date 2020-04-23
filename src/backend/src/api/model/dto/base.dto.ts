@@ -4,6 +4,6 @@ export abstract class BaseDTO {
     public id: string;
 
     protected constructor(entity: BaseEntity) {
-        this.id = entity.guid;
+        this.id = entity.uuid;
     }
 } 
