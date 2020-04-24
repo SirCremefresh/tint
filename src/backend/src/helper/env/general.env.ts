@@ -1,4 +1,4 @@
-export const GeneralHelper: {
+export const GeneralEnv: {
     port: number,
     localhost: string,
     api: string,

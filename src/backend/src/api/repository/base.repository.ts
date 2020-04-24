@@ -1,55 +1,50 @@
-import { Repository, getConnection, DeepPartial } from "typeorm";
+import { Repository } from "typeorm";
 import { BaseEntity } from "../model/entity/base.entity";
 
 export abstract class BaseRepository<Entity extends BaseEntity> extends Repository<Entity>{
 
-    public getRepository(): Repository<Entity> {
-        return super.repository;
-    }
-
     public async getAllAsync(): Promise<Entity[]> {
-        return this.getByAsync();
+        return this.getByAsync({});
     }
 
     public async getAllIncludeRelationsAsync(relations: []): Promise<Entity[]> {
-        return this.getByIncludeRelationsAsync(relations);
+        return this.getByIncludeRelationsAsync(relations, {});
     }
 
-    public async getByAsync(filter: {} = {}): Promise<Entity[]> {
-        return await this._repository.find(filter);
+    public async getByAsync(filter: {}): Promise<Entity[]> {
+        return await this.find(filter);
     }
 
-    public async getByIncludeRelationsAsync(relations: string[], filter: {} = {}): Promise<Entity[]> {
-        return await this._repository.find({ where: filter, relations: relations });
+    public async getByIncludeRelationsAsync(relations: string[], filter: {}): Promise<Entity[]> {
+        return await this.find({ where: filter, relations: relations });
     }
 
-    public async getSingleByAsync(filter: {} = {}): Promise<Entity> {
-        return await this._repository.findOne(filter);
+    public async getSingleByAsync(filter: {}): Promise<Entity> {
+        return await this.getSingleByIncludeRelationsAsync([], filter);
     }
 
-    public async getSingleByIncludeRelationsAsync(relations: string[], filter: {} = {}): Promise<Entity> {
-        return await this._repository.findOne({ where: filter, relations: relations });
+    public async getSingleByIncludeRelationsAsync(relations: string[], filter: {}): Promise<Entity> {
+        return await this.findOne({ where: filter, relations: relations });
     }
 
     public async upsertAsync(entity: Entity): Promise<Entity> {
-        const criteria = { publicId: entity.publicId };
-        const existingEntity = this.getSingleByAsync(criteria);
+        const existingEntity = this.getSingleByAsync({ uuid: entity.uuid });
 
         /*
         if (existingEntity == null)
-            await this._repository.manager.insert(entity);
+            await this.manager.insert(entity);
         else
-            await this._repository.manager.update(criteria, entity);
+            await this.manager.update(criteria, entity);
         */
 
         return null;
     }
 
     public async saveAsync(entity: Entity): Promise<Entity> {
-        return await this._repository.manager.save(entity);
+        return await this.manager.save(entity);
     }
 
     public async deleteAsync(entity: Entity): Promise<Entity> {
-        return await this._repository.manager.remove(entity);
+        return await this.manager.remove(entity);
     }
 }

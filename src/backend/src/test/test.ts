@@ -1,4 +1,4 @@
-import { Injectable } from "../decorator/injection/injectable.decorator";
+import { Injectable } from "../helper/decorator/injection/injectable.decorator";
 import { TesteeTest } from "./testee.test";
 import { MapperTest } from "./mapper.test";
 import { BaseTest } from "./base.test";

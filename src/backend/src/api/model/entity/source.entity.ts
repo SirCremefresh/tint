@@ -10,18 +10,14 @@ export enum SourceType {
 @Entity({name: "source"})
 export class SourceEntity extends BaseEntity {
     @Column()
-    fileName: string;
+    public fileName: string;
 
-    @Column({
-        type: "enum",
-        enum: SourceType,
-        default: SourceType.Jpg
-    })
-    fileType: SourceType;
+    @Column()
+    public fileType: SourceType;
 
     @OneToMany(
         type => PageEntity,
         x => x.source
     )
-    pages: PageEntity[];
+    public pages: PageEntity[];
 }

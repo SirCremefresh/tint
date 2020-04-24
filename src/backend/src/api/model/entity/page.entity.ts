@@ -7,26 +7,26 @@ import { StepEntity } from "./step.entity";
 @Entity({name: "page"})
 export class PageEntity extends BaseEntity {
     @Column()
-    tutorialId: number;
+    public tutorialId: number;
 
     @ManyToOne(
         type => TutorialEntity,
         x => x.pages
     )
-    tutorial: TutorialEntity;
+    public tutorial: TutorialEntity;
 
     @Column()
-    sourceId: number;
+    public sourceId: number;
 
     @ManyToOne(
         type => SourceEntity,
         x => x.pages
     )
-    source: SourceEntity;
+    public source: SourceEntity;
 
     @OneToMany(
         type => StepEntity,
         x => x.page
     )
-    steps: StepEntity[];
+    public steps: StepEntity[];
 }

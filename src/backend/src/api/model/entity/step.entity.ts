@@ -6,23 +6,23 @@ import { MarkEntity } from "./mark.entity";
 @Entity({name: "step"})
 export class StepEntity extends BaseEntity {
     @Column()
-    title: string;
+    public title: string;
 
     @Column()
-    description: string;
+    public description: string;
 
     @Column()
-    pageId: number;
+    public pageId: number;
 
     @ManyToOne(
         type => PageEntity,
         x => x.steps
     )
-    page: PageEntity;
+    public page: PageEntity;
 
     @OneToMany(
         type => MarkEntity,
         x => x.step
     )
-    marks: MarkEntity[];
+    public marks: MarkEntity[];
 }

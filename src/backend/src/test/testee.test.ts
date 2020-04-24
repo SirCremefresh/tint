@@ -1,4 +1,4 @@
-import { Injectable } from "../decorator/injection/injectable.decorator";
+import { Injectable } from "../helper/decorator/injection/injectable.decorator";
 import { BaseTest, Testee } from "./base.test";
 
 @Injectable()

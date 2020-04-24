@@ -1,57 +1,37 @@
 import "reflect-metadata";
 import * as express from "express";
-import * as bodyParser from "body-parser";
-import * as cors from "cors";
-
+import { ApolloServer, gql } from "apollo-server-express";
 import { createConnection, Connection } from "typeorm";
-import { GeneralHelper } from "./helper/env/general.helper";
-import { HttpStatusCode } from "./helper/enum/httpStatusCode.enum";
-import { SocketController } from "./api/controller/socket.controller";
-import { LoginController } from "./api/controller/login.controller";
-import { IRouteDefinition } from "./decorator/routing/IRouteDefinition";
-import { SocialController } from "./api/controller/social.controller";
-import { Injector } from "./decorator/injection/injector";
-import { Test } from "./test/test";
+import { createExpressServer } from "routing-controllers";
+import { buildSchema } from "type-graphql";
+
+import { Injector } from "./helper/decorator/injection/injector";
+import { GeneralEnv } from "./helper/env/general.env";
 import { ConsoleHelper } from "./helper/console/console.helper";
+import { Test } from "./test/test";
 
-const app = express();
-const server = require("http").Server(app);
-const io = require("socket.io")(server, {
-    path: "/socket"
-});
+import { MarkResolver } from "./api/resolver/mark.resolver";
 
-createConnection().then(async (connection: Connection) => {
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(cors({
-        origin: GeneralHelper.localhost,
-        credentials: true,
-        optionsSuccessStatus: HttpStatusCode.Success
-    }));
-    app.use(express.static("../frontend/dist"));
-
-    const controllers: any[] = [
-        LoginController,
-        SocialController
-    ];
-
-    controllers.forEach(controller => {
-        const instance = Injector.resolve<typeof controller>(controller);
-        const prefix: string = Reflect.getMetadata(GeneralHelper.prefixMeta, controller);
-        const routes: IRouteDefinition[] = Reflect.getMetadata(GeneralHelper.routeMeta, controller);
-        
-        routes.forEach(route => {
-            app[route.method](`/api${prefix}${route.path}`, (req: express.Request, res: express.Response, next: Function) => {
-                instance[route.name](req, res);
-            });
-        });
+async function main() {
+    const connection = await createConnection();
+    const schema = await buildSchema({
+        resolvers: [
+            MarkResolver
+        ]
     });
+    
+    const app = express();
+    app.use(express.static("../frontend"));
 
-    io.on("connection", SocketController);
+    const server = new ApolloServer({ schema });
+    server.applyMiddleware({ app });
 
-    server.listen(GeneralHelper.port);
-    ConsoleHelper.info(`Backend running! port: ${GeneralHelper.port}`);
+    app.listen({ port: GeneralEnv.port }, () => {
+        ConsoleHelper.info(`Frontend: http://localhost:${GeneralEnv.port}`);
+        ConsoleHelper.info(`Backend API: http://localhost:${GeneralEnv.port}/api`);
+        ConsoleHelper.info(`Backend GraphQL API: http://localhost:${GeneralEnv.port}${server.graphqlPath}`);
+    });
+}
 
-}).catch(error => console.error(error));
-
+main().then();
 Injector.resolve<Test>(Test).runAllTests();

@@ -5,14 +5,14 @@ import { PageEntity } from "./page.entity";
 @Entity({name: "tutorial"})
 export class TutorialEntity extends BaseEntity {
     @Column()
-    title: string;
+    public title: string;
 
     @Column()
-    description: string;
+    public description: string;
 
     @OneToMany(
         type => PageEntity,
         x => x.tutorial
     )
-    pages: PageEntity[];
+    public pages: PageEntity[];
 }

@@ -1,10 +1,10 @@
-import {PrimaryGeneratedColumn, Column, Generated } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Generated } from "typeorm";
 
 export abstract class BaseEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    public id: number;
 
     @Column()
     @Generated("uuid")
-    uuid: string;
+    public uuid: string;
 }

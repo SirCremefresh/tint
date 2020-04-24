@@ -10,27 +10,23 @@ export enum MarkType {
 @Entity({name: "mark"})
 export class MarkEntity extends BaseEntity {
     @Column("simple-json")
-    location: { x: number, y: number };
+    public location: { x: number, y: number };
 
     @Column("simple-json")
-    size: { width: number, height: number };
+    public size: { width: number, height: number };
 
     @Column()
-    content: string;
-
-    @Column({
-        type: "enum",
-        enum: MarkType,
-        default: MarkType.TextBox
-    })
-    markType: MarkType;
+    public content: string;
 
     @Column()
-    stepId: number;
+    public markType: MarkType;
+
+    @Column()
+    public stepId: number;
 
     @ManyToOne(
         type => StepEntity,
         x => x.marks
     )
-    step: StepEntity;
+    public step: StepEntity;
 }
