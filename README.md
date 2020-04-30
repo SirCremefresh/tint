@@ -9,3 +9,4 @@
 **T**utorial **int**eractive - Create documentations and user guides in the form of interactive tutorials.
 
 ## Subtitle
+![](https://github.com/SirCremefresh/tint/workflows/.github/workflows/main.yml/badge.svg)
